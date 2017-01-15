@@ -180,8 +180,8 @@ cmake ../llvm -G "Ninja" \
 	-DLLVM_OPTIMIZED_TABLEGEN=1 \
 	-DLLVM_TARGETS_TO_BUILD="X86" \
 	-DLLVM_ENABLE_LTO="On" \
-	-DCMAKE_AR=${root_dir}/stage_1/build/bin/llvm-ar \
-	-DCMAKE_RANLIB=${root_dir}/stage_1/build/bin/llvm-ranlib
+	-DCMAKE_AR=${rootDir}/stage_1/build/bin/llvm-ar \
+	-DCMAKE_RANLIB=${rootDir}/stage_1/build/bin/llvm-ranlib
 
 
 
