@@ -91,7 +91,7 @@ cmake ../llvm -G "Ninja" \
 	-DLLVM_OPTIMIZED_TABLEGEN=1 \
 	-DLLVM_BUILD_TOOLS=0 
 
-nice -n 15 ninja-build -l $procs -j $procs clang  llvm-ar llvm-ranlib
+nice -n 15 ninja-build -l $procs -j $procs clang  llvm-ar llvm-ranlib || exit
 echo "stage 1 done"
 
 # clang compiled with system clang is done
@@ -185,5 +185,5 @@ cmake ../llvm -G "Ninja" \
 
 
 
-nice -n 15 make -l $procs -j $procs clang  LLVMgold asan ubsan  scan-build llvm-objdump llvm-opt-report compiler-rt lld llvm-ar llvm-ranlib    #checks all
+nice -n 15 make -l $procs -j $procs clang  LLVMgold asan ubsan  scan-build llvm-objdump llvm-opt-report compiler-rt lld llvm-ar llvm-ranlib   
 echo "stage 2 done"
