@@ -95,54 +95,97 @@ cmake ../llvm -G "Ninja" \
 nice -n 15 ninja-build -l $procs -j $procs clang  llvm-ar llvm-ranlib
 echo "stage 1 done"
 
-# clang compiled with gcc is done
-# stage1 done
-
+# clang compiled with system clang is done
+# now, compile clang again with the newly built version
 cd ${root_dir}
 
+export cloneRoot=${rootDir}/stage_1/
 mkdir stage_2
 cd stage_2
+export stageBase=`pwd`
+export LLVMSrc=${stageBase}/llvm
+export clangSrc=${LLVMSrc}/tools/clang
+export toolsExtraSrc=${LLVMSrc}/tools/clang/tools/extra
+export compilerRTSrc=${stageBase}/llvm/projects/compiler-rt
+export pollySrc=${stageBase}/llvm/tools/polly
+export lldSRC=${stageBase}/llvm/tools/lld
 
-export clone_root=${root_dir}/stage_1/
-export BASE=`pwd`
-export LLVM_SRC=${BASE}/llvm
-export CLANG_SRC=${LLVM_SRC}/tools/clang
-export TOOLS_EXTRA_SRC=${LLVM_SRC}/tools/clang/tools/extra
-export COMPILERRT_SRC=${BASE}/llvm/projects/compiler-rt
-export POLLY_SRC=${BASE}/llvm/tools/polly
-export LLD_SRC=${BASE}/llvm/tools/lld
-
-
-export LLVM_BUILD=${BASE}/build
+export LLVMBuild=${stageBase}/build
 
 
+# we can simply clone from local to local repo, no need to pull everything from the net again
 
-export  CXX="${root_dir}/stage_1/build/bin/clang++"
-export  CC="${root_dir}/stage_1/build/bin/clang"
+echo llvm
+if ! test -d ${LLVMSrc}; then
+    git clone ${cloneRoot}/llvm ${LLVMSrc}
+else
+	cd ${LLVMSrc}
+	git pull
+fi
+
+echo clang
+if ! test -d ${clangSrc}; then
+    git clone ${cloneRoot}/llvm/tools/clang ${clangSrc}
+else
+	cd ${clangSrc}
+	git pull
+fi
+
+echo tools
+if ! test -d ${toolsExtraSrc}; then
+    git clone ${cloneRoot}/llvm/tools/clang/tools/extra ${toolsExtraSrc}
+else
+	cd ${toolsExtraSrc}
+	git pull
+fi
+
+if ! test -d ${compilerRTSrc}; then
+    git clone  ${cloneRoot}/llvm/projects/compiler-rt ${compilerRTSrc}
+else
+	cd ${compilerRTSrc}
+	git pull
+fi
 
 
-mkdir -p ${LLVM_BUILD}
-cd ${LLVM_BUILD}
-cmake ../llvm -G "Unix Makefiles" \
-	-DDISABLE_ASSERTIONS=1 \
-	-DENABLE_OPTIMIZED=1 \
+if ! test -d ${pollySrc}; then
+    git clone  ${cloneRoot}/llvm/tools/polly ${pollySrc}
+else
+	cd ${pollySrc}
+	git pull
+fi
+
+
+if ! test -d ${lldSRC}; then
+    git clone  ${cloneRoot}/llvm/tools/lld ${lldSRC}
+else
+	cd ${lldSRC}
+	git pull
+fi
+
+
+
+# use new clang++
+export  CXX="${rootDir}/stage_1/build/bin/clang++"
+export  CC="${rootDir}/stage_1/build/bin/clang"
+mkdir -p ${LLVMBuild}
+cd ${LLVMBuild}
+
+
+
+
+cmake ../llvm -G "Ninja" \
 	-DCMAKE_BUILD_TYPE=Release \
 	-DLLVM_BINUTILS_INCDIR=/usr/include \
-	-DDEBUG_SYMBOLS=0 \
 	-DCMAKE_C_FLAGS="-march=native -O3  -g0 -DNDEBUG" \
 	-DCMAKE_CXX_FLAGS="-march=native -O3  -g0 -DNDEBUG" \
-	-DLLVM_PARALLEL_LINK_JOBS=1 \
+	-DLLVM_PARALLEL_LINK_JOBS=2 \
 	-DLLVM_OPTIMIZED_TABLEGEN=1 \
-	-DLLVM_TARGETS_TO_BUILD="X86" 
+	-DLLVM_TARGETS_TO_BUILD="X86" \
+	-DLLVM_ENABLE_LTO="On" \
+	-DCMAKE_AR=${root_dir}/stage_1/build/bin/llvm-ar \
+	-DCMAKE_RANLIB=${root_dir}/stage_1/build/bin/llvm-ranlib
 
-	#-DLLVM_ENABLE_LTO="On" 
-
-#export VERBOSE=1
 
 
-#nice -n 15 make -l $procs -j $procs all  
-#nice -n 15 make -l $procs -j $procs check-all || true
-
-nice -n 15 make -l $procs -j $procs clang  LLVMgold asan ubsan  scan-build llvm-objdump llvm-opt-report compiler-rt lld # lld # llvm-ar llvm-ranlib   
-#nice -n 15 make  -l $procs -j $procs check-all
+nice -n 15 make -l $procs -j $procs clang  LLVMgold asan ubsan  scan-build llvm-objdump llvm-opt-report compiler-rt lld llvm-ar llvm-ranlib    #checks all
 echo "stage 2 done"
