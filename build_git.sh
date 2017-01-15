@@ -21,9 +21,62 @@ export lldSRC=${BASE}/llvm/tools/lld #lld linker
 
 # build dir
 export LLVMBuild=${stageBase}/build
-
+#compilers to use for stage 1
 export CXX=clang++
 export CC=clang
+
+
+#now, clone/update the repos
+
+echo llvm
+if ! test -d ${LLVMSrc}; then
+    git clone http://llvm.org/git/llvm.git ${LLVMSrc}
+else
+	cd ${LLVMSrc}
+	git pull
+fi
+
+echo clang
+if ! test -d ${clangSrc}; then
+    git clone http://llvm.org/git/clang.git ${clangSrc}
+else
+	cd ${clangSrc}
+	git pull
+fi
+
+echo clang-tools-extra
+if ! test -d ${toolsExtraSrc}; then
+    git clone http://llvm.org/git/clang-tools-extra.git ${toolsExtraSrc}
+else
+	cd ${toolsExtraSrc}
+	git pull
+fi
+
+echo compiler-rt
+if ! test -d ${compilerRTSrc}; then
+    git clone http://llvm.org/git/compiler-rt.git ${compilerRTSrc}
+else
+	cd ${compilerRTSrc}
+	git pull
+fi
+
+echo polly
+if ! test -d ${pollySrc}; then
+    git clone http://llvm.org/git/polly.git ${pollySrc}
+else
+	cd ${pollySrc}
+	git pull
+fi
+
+echo lld
+if ! test -d ${lldSRC}; then
+    git clone http://llvm.org/git/lld.git ${lldSRC}
+else
+	cd ${lldSRC}
+	git pull
+fi
+
+# start building
 
 mkdir -p ${LLVMBuild}
 cd ${LLVMBuild}
