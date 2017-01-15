@@ -30,7 +30,7 @@ echo "Cloning/updating repos..."
 
 echo llvm
 if ! test -d ${LLVMSrc}; then
-    git clone http://llvm.org/git/llvm.git ${LLVMSrc}
+	git clone http://llvm.org/git/llvm.git ${LLVMSrc}
 else
 	cd ${LLVMSrc}
 	git pull
@@ -38,7 +38,7 @@ fi
 
 echo clang
 if ! test -d ${clangSrc}; then
-    git clone http://llvm.org/git/clang.git ${clangSrc}
+	git clone http://llvm.org/git/clang.git ${clangSrc}
 else
 	cd ${clangSrc}
 	git pull
@@ -46,7 +46,7 @@ fi
 
 echo clang-tools-extra
 if ! test -d ${toolsExtraSrc}; then
-    git clone http://llvm.org/git/clang-tools-extra.git ${toolsExtraSrc}
+	git clone http://llvm.org/git/clang-tools-extra.git ${toolsExtraSrc}
 else
 	cd ${toolsExtraSrc}
 	git pull
@@ -62,7 +62,7 @@ fi
 
 echo polly
 if ! test -d ${pollySrc}; then
-    git clone http://llvm.org/git/polly.git ${pollySrc}
+	git clone http://llvm.org/git/polly.git ${pollySrc}
 else
 	cd ${pollySrc}
 	git pull
@@ -70,7 +70,7 @@ fi
 
 echo lld
 if ! test -d ${lldSRC}; then
-    git clone http://llvm.org/git/lld.git ${lldSRC}
+	git clone http://llvm.org/git/lld.git ${lldSRC}
 else
 	cd ${lldSRC}
 	git pull
@@ -124,7 +124,7 @@ fi
 
 echo clang
 if ! test -d ${clangSrc}; then
-    git clone ${cloneRoot}/llvm/tools/clang ${clangSrc}
+	git clone ${cloneRoot}/llvm/tools/clang ${clangSrc}
 else
 	cd ${clangSrc}
 	git pull
@@ -132,14 +132,14 @@ fi
 
 echo tools
 if ! test -d ${toolsExtraSrc}; then
-    git clone ${cloneRoot}/llvm/tools/clang/tools/extra ${toolsExtraSrc}
+	git clone ${cloneRoot}/llvm/tools/clang/tools/extra ${toolsExtraSrc}
 else
 	cd ${toolsExtraSrc}
 	git pull
 fi
 
 if ! test -d ${compilerRTSrc}; then
-    git clone  ${cloneRoot}/llvm/projects/compiler-rt ${compilerRTSrc}
+	git clone  ${cloneRoot}/llvm/projects/compiler-rt ${compilerRTSrc}
 else
 	cd ${compilerRTSrc}
 	git pull
@@ -147,7 +147,7 @@ fi
 
 
 if ! test -d ${pollySrc}; then
-    git clone  ${cloneRoot}/llvm/tools/polly ${pollySrc}
+	git clone  ${cloneRoot}/llvm/tools/polly ${pollySrc}
 else
 	cd ${pollySrc}
 	git pull
@@ -155,7 +155,7 @@ fi
 
 
 if ! test -d ${lldSRC}; then
-    git clone  ${cloneRoot}/llvm/tools/lld ${lldSRC}
+	git clone  ${cloneRoot}/llvm/tools/lld ${lldSRC}
 else
 	cd ${lldSRC}
 	git pull
@@ -164,8 +164,8 @@ fi
 
 
 # use new clang++
-export  CXX="${rootDir}/stage_1/build/bin/clang++"
-export  CC="${rootDir}/stage_1/build/bin/clang"
+export CXX="${rootDir}/stage_1/build/bin/clang++"
+export CC="${rootDir}/stage_1/build/bin/clang"
 mkdir -p ${LLVMBuild}
 cd ${LLVMBuild}
 
@@ -184,5 +184,5 @@ cmake ../llvm -G "Ninja" \
 
 
 
-nice -n 15 ninja-build -l $procs -j $procs clang  LLVMgold asan ubsan  scan-build llvm-objdump llvm-opt-report compiler-rt lld llvm-ar llvm-ranlib   
+nice -n 15 ninja-build -l $procs -j $procs clang  LLVMgold asan ubsan  scan-build llvm-objdump llvm-opt-report compiler-rt lld llvm-ar llvm-ranlib
 echo "stage 2 done"
