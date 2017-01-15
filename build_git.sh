@@ -83,11 +83,8 @@ mkdir -p ${LLVMBuild}
 cd ${LLVMBuild}
 
 cmake ../llvm -G "Unix Makefiles" \
-	-DDISABLE_ASSERTIONS=1 \
-	-DENABLE_OPTIMIZED=1 \
 	-DCMAKE_BUILD_TYPE=Release \
 	-DLLVM_BINUTILS_INCDIR=/usr/include \
-	-DDEBUG_SYMBOLS=0 \
 	-DCMAKE_C_FLAGS="-march=native -O3 -g0 -DNDEBUG" \
 	-DCMAKE_CXX_FLAGS="-march=native -O3 -g0 -DNDEBUG" \
 	-DLLVM_PARALLEL_LINK_JOBS=1 \
