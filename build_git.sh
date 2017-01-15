@@ -181,6 +181,7 @@ cmake ../llvm -G "Ninja" \
 	-DLLVM_ENABLE_LTO="On" \
 	-DCMAKE_AR="${rootDir}/stage_1/build/bin/llvm-ar" \
 	-DCMAKE_RANLIB="${rootDir}/stage_1/build/bin/llvm-ranlib" \
+	-DLLVM_USE_LINKER="${rootDir}/stage_1/build/bin/ld.lld" 
 
 
 
