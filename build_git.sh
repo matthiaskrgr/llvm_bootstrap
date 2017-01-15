@@ -17,7 +17,7 @@ export clangSrc=${LLVMSrc}/tools/clang  #clang
 export toolsExtraSrc=${LLVMSrc}/tools/clang/tools/extra #tools
 export compilerRTSrc=${LLVMSrc}/projects/compiler-rt #sanitizers
 export pollySrc=${LLVMSrc}/tools/polly #polly
-export lldSRC=${BASE}/llvm/tools/lld #lld linker
+export lldSRC=${stageBase}/llvm/tools/lld #lld linker
 
 # build dir
 export LLVMBuild=${stageBase}/build
@@ -26,7 +26,8 @@ export CXX=clang++
 export CC=clang
 
 
-#now, clone/update the repos
+echo "Cloning/updating repos..."
+
 
 echo llvm
 if ! test -d ${LLVMSrc}; then
