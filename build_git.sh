@@ -1,8 +1,7 @@
 #!/bin/bash
 
 # This script bootstraps llvm, clang and friends in optimized way
-# requires gold linker (for lto)
-
+# requires gold linker (for lto) and ninja
 
 procs=5 #number of jobs to run at a time
 export CCACHE_DISABLE=1 #disable ccache
@@ -97,10 +96,10 @@ echo "stage 1 done"
 
 # clang compiled with system clang is done
 # now, compile clang again with the newly built version
-cd ${root_dir}
+cd ${rootDir}
 
 export cloneRoot=${rootDir}/stage_1/
-mkdir stage_2
+mkdir -p stage_2
 cd stage_2
 export stageBase=`pwd`
 export LLVMSrc=${stageBase}/llvm
@@ -169,7 +168,6 @@ export  CXX="${rootDir}/stage_1/build/bin/clang++"
 export  CC="${rootDir}/stage_1/build/bin/clang"
 mkdir -p ${LLVMBuild}
 cd ${LLVMBuild}
-
 
 
 
