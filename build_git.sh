@@ -82,7 +82,7 @@ fi
 mkdir -p ${LLVMBuild}
 cd ${LLVMBuild}
 
-cmake ../llvm -G "Unix Makefiles" \
+cmake ../llvm -G "Ninja" \
 	-DCMAKE_BUILD_TYPE=Release \
 	-DLLVM_BINUTILS_INCDIR=/usr/include \
 	-DCMAKE_C_FLAGS="-march=native -O3 -g0 -DNDEBUG" \
@@ -92,7 +92,7 @@ cmake ../llvm -G "Unix Makefiles" \
 	-DLLVM_OPTIMIZED_TABLEGEN=1 \
 	-DLLVM_BUILD_TOOLS=0 
 
-nice -n 15 make -l $procs -j $procs clang # llvm-ar llvm-ranlib
+nice -n 15 ninja-build -l $procs -j $procs clang  llvm-ar llvm-ranlib
 echo "stage 1 done"
 
 # clang compiled with gcc is done
