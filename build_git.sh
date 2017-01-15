@@ -138,6 +138,7 @@ else
 	git pull
 fi
 
+echo copiler-rt
 if ! test -d ${compilerRTSrc}; then
 	git clone  ${cloneRoot}/llvm/projects/compiler-rt ${compilerRTSrc}
 else
@@ -145,7 +146,7 @@ else
 	git pull
 fi
 
-
+echo polly
 if ! test -d ${pollySrc}; then
 	git clone  ${cloneRoot}/llvm/tools/polly ${pollySrc}
 else
@@ -153,7 +154,7 @@ else
 	git pull
 fi
 
-
+echo lld
 if ! test -d ${lldSRC}; then
 	git clone  ${cloneRoot}/llvm/tools/lld ${lldSRC}
 else
