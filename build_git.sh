@@ -180,10 +180,10 @@ cmake ../llvm -G "Ninja" \
 	-DLLVM_OPTIMIZED_TABLEGEN=1 \
 	-DLLVM_TARGETS_TO_BUILD="X86" \
 	-DLLVM_ENABLE_LTO="On" \
-	-DCMAKE_AR=${rootDir}/stage_1/build/bin/llvm-ar \
-	-DCMAKE_RANLIB=${rootDir}/stage_1/build/bin/llvm-ranlib
+	-DCMAKE_AR="${rootDir}/stage_1/build/bin/llvm-ar" \
+	-DCMAKE_RANLIB="${rootDir}/stage_1/build/bin/llvm-ranlib" \
 
 
 
-nice -n 15 make -l $procs -j $procs clang  LLVMgold asan ubsan  scan-build llvm-objdump llvm-opt-report compiler-rt lld llvm-ar llvm-ranlib   
+nice -n 15 ninja-build -l $procs -j $procs clang  LLVMgold asan ubsan  scan-build llvm-objdump llvm-opt-report compiler-rt lld llvm-ar llvm-ranlib   
 echo "stage 2 done"
