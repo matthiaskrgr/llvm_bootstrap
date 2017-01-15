@@ -91,7 +91,7 @@ cmake ../llvm -G "Ninja" \
 	-DLLVM_OPTIMIZED_TABLEGEN=1 \
 	-DLLVM_BUILD_TOOLS=0 
 
-nice -n 15 ninja-build -l $procs -j $procs clang  llvm-ar llvm-ranlib || exit
+nice -n 15 ninja-build -l $procs -j $procs clang LLVMgold llvm-ar llvm-ranlib || exit
 echo "stage 1 done"
 
 # clang compiled with system clang is done
@@ -168,7 +168,6 @@ export  CXX="${rootDir}/stage_1/build/bin/clang++"
 export  CC="${rootDir}/stage_1/build/bin/clang"
 mkdir -p ${LLVMBuild}
 cd ${LLVMBuild}
-
 
 
 cmake ../llvm -G "Ninja" \
