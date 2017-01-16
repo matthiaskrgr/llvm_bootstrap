@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # This script bootstraps llvm, clang and friends in optimized way
-# requires gold linker (for lto) and ninja
+# requires gold linker (for lto) http://llvm.org/docs/GoldPlugin.html 
+# and ninja https://ninja-build.org/
 
 procs=5 #number of jobs to run at a time
 export CCACHE_DISABLE=1 #disable ccache
