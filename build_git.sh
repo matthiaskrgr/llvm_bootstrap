@@ -187,6 +187,6 @@ cmake ../llvm -G "Ninja" \
 
 
 
-nice -n 15 ninja-build -l $procs -j $procs clang LLVMgold asan ubsan scan-build llvm-objdump llvm-opt-report compiler-rt lld llvm-ar llvm-ranlib  || exit
+nice -n 15 ninja-build -l $procs -j $procs clang LLVMgold asan ubsan scan-build llvm-objdump llvm-opt-report compiler-rt lld llvm-ar llvm-ranlib bugpoint || exit
 #nice -n 15 ninja-build -l $procs -j $procs check-all  # building this will take ages with lto, also take care having automatic core dumps disabled before running
 echo "stage 2 done"
