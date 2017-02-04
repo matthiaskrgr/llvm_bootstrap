@@ -128,7 +128,7 @@ cmake ../llvm -G "Ninja" \
 nice -n 15 ninja-build -l $procs -j $procs clang LLVMgold llvm-ar llvm-ranlib lld || exit
 echo "stage 1 done"
 
-exit
+
 # clang compiled with system clang is done
 # now, compile clang again with the newly built version
 cd ${rootDir}
@@ -136,7 +136,13 @@ cd ${rootDir}
 export cloneRoot=${rootDir}/stage_1/
 mkdir -p stage_2
 cd stage_2
+
+# instead of cloning all  the repos again, we can simply copy "llvm" dir indo stage2
 export stageBase=`pwd`
+cd ${stageBase}
+echo "copying files"
+cp -r ${LLVMSrc} ./
+
 export LLVMSrc=${stageBase}/llvm
 export clangSrc=${LLVMSrc}/tools/clang
 export toolsExtraSrc=${LLVMSrc}/tools/clang/tools/extra
@@ -146,56 +152,6 @@ export lldSRC=${stageBase}/llvm/tools/lld
 
 export LLVMBuild=${stageBase}/build
 
-
-# we can simply clone from local to local repo, no need to pull everything from the net again
-
-echo llvm
-if ! test -d ${LLVMSrc}; then
-    git clone ${cloneRoot}/llvm ${LLVMSrc}
-else
-	cd ${LLVMSrc}
-	git pull
-fi
-
-echo clang
-if ! test -d ${clangSrc}; then
-	git clone ${cloneRoot}/llvm/tools/clang ${clangSrc}
-else
-	cd ${clangSrc}
-	git pull
-fi
-
-echo tools
-if ! test -d ${toolsExtraSrc}; then
-	git clone ${cloneRoot}/llvm/tools/clang/tools/extra ${toolsExtraSrc}
-else
-	cd ${toolsExtraSrc}
-	git pull
-fi
-
-echo copiler-rt
-if ! test -d ${compilerRTSrc}; then
-	git clone  ${cloneRoot}/llvm/projects/compiler-rt ${compilerRTSrc}
-else
-	cd ${compilerRTSrc}
-	git pull
-fi
-
-echo polly
-if ! test -d ${pollySrc}; then
-	git clone  ${cloneRoot}/llvm/tools/polly ${pollySrc}
-else
-	cd ${pollySrc}
-	git pull
-fi
-
-echo lld
-if ! test -d ${lldSRC}; then
-	git clone  ${cloneRoot}/llvm/tools/lld ${lldSRC}
-else
-	cd ${lldSRC}
-	git pull
-fi
 
 
 
