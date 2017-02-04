@@ -2,22 +2,16 @@
 VERSION="4.0.0rc1"
 
 #get archives
-wget "http://llvm.org/pre-releases/4.0.0/rc1/llvm-${VERSION}.src.tar.xz"
-wget "http://llvm.org/pre-releases/4.0.0/rc1/cfe-${VERSION}.src.tar.xz"
-wget "http://llvm.org/pre-releases/4.0.0/rc1/compiler-rt-${VERSION}.src.tar.xz"
-wget "http://llvm.org/pre-releases/4.0.0/rc1/lld-${VERSION}.src.tar.xz"
-wget "http://llvm.org/pre-releases/4.0.0/rc1/polly-${VERSION}.src.tar.xz"
-wget "http://llvm.org/pre-releases/4.0.0/rc1/clang-tools-extra-${VERSION}.src.tar.xz"
+wget -c "http://llvm.org/pre-releases/4.0.0/rc1/llvm-${VERSION}.src.tar.xz"
+wget -c "http://llvm.org/pre-releases/4.0.0/rc1/cfe-${VERSION}.src.tar.xz"
+wget -c "http://llvm.org/pre-releases/4.0.0/rc1/compiler-rt-${VERSION}.src.tar.xz"
+wget -c "http://llvm.org/pre-releases/4.0.0/rc1/lld-${VERSION}.src.tar.xz"
+wget -c "http://llvm.org/pre-releases/4.0.0/rc1/polly-${VERSION}.src.tar.xz"
+wget -c "http://llvm.org/pre-releases/4.0.0/rc1/clang-tools-extra-${VERSION}.src.tar.xz"
 
-#get signatures
-
-wget "http://llvm.org/pre-releases/4.0.0/rc1/llvm-${VERSION}.src.tar.xz.sig"
-wget "http://llvm.org/pre-releases/4.0.0/rc1/cfe-${VERSION}.src.tar.xz.sig"
-wget "http://llvm.org/pre-releases/4.0.0/rc1/compiler-rt-${VERSION}.src.tar.xz.sig"
-wget "http://llvm.org/pre-releases/4.0.0/rc1/lld-${VERSION}.src.tar.xz.sig"
-wget "http://llvm.org/pre-releases/4.0.0/rc1/polly-${VERSION}.src.tar.xz.sig"
-wget "http://llvm.org/pre-releases/4.0.0/rc1/clang-tools-extra-${VERSION}.src.tar.xz.sig"
-
+# extract bla to foo/bla
+#mkdir $foo
+#tar xvfJ compiler-rt-4.0.0rc1.src.tar.xz   -C foo  --strip-components=1
 
 # This script bootstraps llvm, clang and friends in optimized way
 # requires gold linker (for lto) http://llvm.org/docs/GoldPlugin.html 
@@ -47,54 +41,72 @@ export CC=clang
 
 echo "Cloning/updating repos..."
 
-
+cd ${rootDir}
 echo llvm
 if ! test -d ${LLVMSrc}; then
-	git clone http://llvm.org/git/llvm.git ${LLVMSrc}
+	mkdir ${LLVMSrc}
+	tar xvfJ llvm-${VERSION}.src.tar.xz   -C ${LLVMSrc}  --strip-components=1
 else
 	cd ${LLVMSrc}
-	git pull
+	echo "llvm: nothing to do"
 fi
+cd ${rootDir}
 
 echo clang
 if ! test -d ${clangSrc}; then
-	git clone http://llvm.org/git/clang.git ${clangSrc}
+	mkdir ${clangSrc}
+	tar xvfJ cfe-${VERSION}.src.tar.xz   -C ${clangSrc}  --strip-components=1
 else
 	cd ${clangSrc}
-	git pull
+	echo "clang: nothing to do"
 fi
+cd ${rootDir}
+
 
 echo clang-tools-extra
 if ! test -d ${toolsExtraSrc}; then
-	git clone http://llvm.org/git/clang-tools-extra.git ${toolsExtraSrc}
+	mkdir ${toolsExtraSrc}
+	tar xvfJ clang-tools-extra-${VERSION}.src.tar.xz   -C ${toolsExtraSrc}  --strip-components=1
 else
 	cd ${toolsExtraSrc}
-	git pull
+	echo "clang tools extra: nothing to do"
 fi
+cd ${rootDir}
+
 
 echo compiler-rt
 if ! test -d ${compilerRTSrc}; then
-    git clone http://llvm.org/git/compiler-rt.git ${compilerRTSrc}
+    mkdir ${compilerRTSrc}
+    tar xvfJ compiler-rt-${VERSION}.src.tar.xz   -C ${compilerRTSrc}  --strip-components=1
 else
 	cd ${compilerRTSrc}
-	git pull
+	echo "compiler-rt: nothing to do"
 fi
+cd ${rootDir}
+
+
 
 echo polly
 if ! test -d ${pollySrc}; then
-	git clone http://llvm.org/git/polly.git ${pollySrc}
+	mkdir ${pollySrc}
+	tar xvfJ polly-${VERSION}.src.tar.xz -C ${pollySrc} --strip-components=1
 else
 	cd ${pollySrc}
-	git pull
+	echo "polly: nothing to do"
 fi
+cd ${rootDir}
 
 echo lld
 if ! test -d ${lldSRC}; then
-	git clone http://llvm.org/git/lld.git ${lldSRC}
+	mkdir ${lldSRC}
+	tar xvfJ lld-${VERSION}.src.tar.xz -C ${lldSRC} --strip-components=1
 else
 	cd ${lldSRC}
-	git pull
+	echo "lld: nothing to do"
 fi
+
+cd ${rootDir}/stage_1/
+
 
 # start building
 
@@ -111,9 +123,12 @@ cmake ../llvm -G "Ninja" \
 	-DLLVM_OPTIMIZED_TABLEGEN=1 \
 	-DLLVM_BUILD_TOOLS=0 
 
+
+
 nice -n 15 ninja-build -l $procs -j $procs clang LLVMgold llvm-ar llvm-ranlib lld || exit
 echo "stage 1 done"
 
+exit
 # clang compiled with system clang is done
 # now, compile clang again with the newly built version
 cd ${rootDir}
