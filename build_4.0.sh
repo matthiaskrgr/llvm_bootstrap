@@ -141,7 +141,7 @@ cd stage_2
 export stageBase=`pwd`
 cd ${stageBase}
 echo "copying files"
-cp -r ${LLVMSrc} ./
+cp --reflink=auto -r ${LLVMSrc} ./
 
 export LLVMSrc=${stageBase}/llvm
 export clangSrc=${LLVMSrc}/tools/clang
