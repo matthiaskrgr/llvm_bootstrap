@@ -1,13 +1,13 @@
 #!/bin/bash
-VERSION="4.0.0rc2"
+VERSION="4.0.0rc3"
 
 #get archives
-wget -c "http://llvm.org/pre-releases/4.0.0/rc2/llvm-${VERSION}.src.tar.xz"
-wget -c "http://llvm.org/pre-releases/4.0.0/rc2/cfe-${VERSION}.src.tar.xz"
-wget -c "http://llvm.org/pre-releases/4.0.0/rc2/compiler-rt-${VERSION}.src.tar.xz"
-wget -c "http://llvm.org/pre-releases/4.0.0/rc2/lld-${VERSION}.src.tar.xz"
-wget -c "http://llvm.org/pre-releases/4.0.0/rc2/polly-${VERSION}.src.tar.xz"
-wget -c "http://llvm.org/pre-releases/4.0.0/rc2/clang-tools-extra-${VERSION}.src.tar.xz"
+wget -c "http://llvm.org/pre-releases/4.0.0/rc3/llvm-${VERSION}.src.tar.xz"
+wget -c "http://llvm.org/pre-releases/4.0.0/rc3/cfe-${VERSION}.src.tar.xz"
+wget -c "http://llvm.org/pre-releases/4.0.0/rc3/compiler-rt-${VERSION}.src.tar.xz"
+wget -c "http://llvm.org/pre-releases/4.0.0/rc3/lld-${VERSION}.src.tar.xz"
+wget -c "http://llvm.org/pre-releases/4.0.0/rc3/polly-${VERSION}.src.tar.xz"
+wget -c "http://llvm.org/pre-releases/4.0.0/rc3/clang-tools-extra-${VERSION}.src.tar.xz"
 
 # This script bootstraps llvm, clang and friends in optimized way
 # requires gold linker (for lto) http://llvm.org/docs/GoldPlugin.html 
@@ -174,5 +174,5 @@ cmake ../llvm -G "Ninja" \
 
 
 nice -n 15 ninja-build -l $procs -j $procs clang LLVMgold asan ubsan scan-build llvm-objdump llvm-opt-report compiler-rt lld llvm-ar llvm-ranlib bugpoint || exit
-#nice -n 15 ninja-build -l $procs -j $procs check-all  # building this will take ages with lto, also take care having automatic core dumps disabled before running
+nice -n 15 ninja-build -l $procs -j $procs check-all  # building this will take ages with lto, also take care having automatic core dumps disabled before running
 echo "stage 2 done"
