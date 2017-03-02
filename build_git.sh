@@ -4,7 +4,7 @@
 # requires gold linker (for lto) http://llvm.org/docs/GoldPlugin.html 
 # and ninja https://ninja-build.org/
 
-procs=5 #number of jobs to run at a time
+procs=3 #number of jobs to run at a time
 export CCACHE_DISABLE=1 #disable ccache
 rootDir=`pwd` #cwd
 
@@ -188,5 +188,14 @@ cmake ../llvm -G "Ninja" \
 
 
 nice -n 15 ninja-build -l $procs -j $procs clang LLVMgold asan ubsan scan-build llvm-objdump llvm-opt-report compiler-rt lld llvm-ar llvm-ranlib bugpoint || exit
-#nice -n 15 ninja-build -l $procs -j $procs check-all  # building this will take ages with lto, also take care having automatic core dumps disabled before running
+echo "Compiling done, building and running tests..."
+# building this will take ages with lto, also take care having automatic core dumps disabled before running
+# to do this, find your /etc/systemd/coredump.conf
+# and add
+#
+# [Coredump]
+# Storage=none
+#
+
+nice -n 15 ninja-build -l $procs -j $procs check-all
 echo "stage 2 done"
