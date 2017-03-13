@@ -1,13 +1,14 @@
 #!/bin/bash
-VERSION="4.0.0rc4"
+VERSION="4.0.0"
 
 #get archives
-wget -c "http://llvm.org/pre-releases/4.0.0/rc4/llvm-${VERSION}.src.tar.xz"
-wget -c "http://llvm.org/pre-releases/4.0.0/rc4/cfe-${VERSION}.src.tar.xz"
-wget -c "http://llvm.org/pre-releases/4.0.0/rc4/compiler-rt-${VERSION}.src.tar.xz"
-wget -c "http://llvm.org/pre-releases/4.0.0/rc4/lld-${VERSION}.src.tar.xz"
-wget -c "http://llvm.org/pre-releases/4.0.0/rc4/polly-${VERSION}.src.tar.xz"
-wget -c "http://llvm.org/pre-releases/4.0.0/rc4/clang-tools-extra-${VERSION}.src.tar.xz"
+wget -c "http://releases.llvm.org/4.0.0/llvm-${VERSION}.src.tar.xz"
+wget -c "http://releases.llvm.org/4.0.0/cfe-${VERSION}.src.tar.xz"
+wget -c "http://releases.llvm.org/4.0.0/compiler-rt-${VERSION}.src.tar.xz"
+wget -c "http://releases.llvm.org/4.0.0/lld-${VERSION}.src.tar.xz"
+wget -c "http://releases.llvm.org/4.0.0/polly-${VERSION}.src.tar.xz"
+wget -c "http://releases.llvm.org/4.0.0/clang-tools-extra-${VERSION}.src.tar.xz"
+http://releases.llvm.org/4.0.0/lldb-4.0.0.src.tar.xz
 
 # This script bootstraps llvm, clang and friends in optimized way
 # requires gold linker (for lto) http://llvm.org/docs/GoldPlugin.html 
