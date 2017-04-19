@@ -4,7 +4,7 @@
 # requires gold linker (for lto) http://llvm.org/docs/GoldPlugin.html 
 # and ninja https://ninja-build.org/
 
-procs=4 #number of jobs to run at a time
+procs=3 #number of jobs to run at a time
 export CCACHE_DISABLE=1 #disable ccache
 rootDir=`pwd` #cwd
 
