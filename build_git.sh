@@ -199,7 +199,6 @@ mkdir -p ${LLVMBuild}
 cp ${LLVMObjects}/bin  --force  --recursive --reflink=auto --target-directory ${LLVMBuild}
 mkdir ${LLVMBuild}/lib/
 cp ${LLVMObjects}/lib/clang  --force  --recursive --reflink=auto --target-directory ${LLVMBuild}/lib/
-cp ${LLVMObjects}/lib/clang  --force  --recursive --reflink=auto --target-directory ${LLVMBuild}/lib/
 cp `find . | grep "\.so"` --force  --recursive --reflink=auto --target-directory ${LLVMBuild}/lib/
 
 echo "Installing done."
