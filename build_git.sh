@@ -110,7 +110,9 @@ export compilerRTSrc=${stageBase}/llvm/projects/compiler-rt
 export pollySrc=${stageBase}/llvm/tools/polly
 export lldSRC=${stageBase}/llvm/tools/lld
 
-export LLVMBuild=${stageBase}/build
+export LLVMObjects=${stageBase}/objects # build in here
+export LLVMBuild=${stageBase}/build     # make install into here
+export LLVMTest=${stageBase}/test       # compile and exec tests here
 
 
 # we can simply clone from local to local repo, no need to pull everything from the net again
@@ -168,8 +170,8 @@ fi
 # use new clang++
 export CXX="${rootDir}/stage_1/build/bin/clang++"
 export CC="${rootDir}/stage_1/build/bin/clang"
-mkdir -p ${LLVMBuild}
-cd ${LLVMBuild}
+mkdir -p ${LLVMObjects}
+cd ${LLVMObjects}
 
 
 cmake ../llvm -G "Ninja" \
@@ -183,12 +185,24 @@ cmake ../llvm -G "Ninja" \
 	-DLLVM_ENABLE_LTO="Full" \
 	-DCMAKE_AR="${rootDir}/stage_1/build/bin/llvm-ar" \
 	-DCMAKE_RANLIB="${rootDir}/stage_1/build/bin/llvm-ranlib" \
-	-DLLVM_USE_LINKER="${rootDir}/stage_1/build/bin/ld.lld" 
+	-DLLVM_USE_LINKER="${rootDir}/stage_1/build/bin/ld.lld"  \
+
+export TARGETS=" clang LLVMgold asan ubsan scan-build llvm-objdump llvm-opt-report compiler-rt lld llvm-ar llvm-ranlib bugpoint llvm-stress llc"
 
 
 
-nice -n 15 ninja-build -l $procs -j $procs clang LLVMgold asan ubsan scan-build llvm-objdump llvm-opt-report compiler-rt lld llvm-ar llvm-ranlib bugpoint llvm-stress llc || exit
-echo "Compiling done, building and running tests..."
+nice -n 15 ninja-build -l $procs -j $procs ${TARGETS} || exit
+echo "Compiling done."
+echo "Installing..."
+rm -rf ${LLVMBuild}
+mkdir -p ${LLVMBuild}
+cp ${LLVMObjects}/bin  --force  --recursive --reflink=auto --target-directory ${LLVMBuild}
+mkdir ${LLVMBuild}/lib/
+cp ${LLVMObjects}/lib/clang  --force  --recursive --reflink=auto --target-directory ${LLVMBuild}/lib/
+cp ${LLVMObjects}/lib/clang  --force  --recursive --reflink=auto --target-directory ${LLVMBuild}/lib/
+cp `find . | grep "\.so"` --force  --recursive --reflink=auto --target-directory ${LLVMBuild}/lib/
+
+echo "Installing done."
 # building this will take ages with lto, also take care having automatic core dumps disabled before running
 # to do this, find your /etc/systemd/coredump.conf
 # and add
@@ -196,6 +210,27 @@ echo "Compiling done, building and running tests..."
 # [Coredump]
 # Storage=none
 #
+mkdir -p ${LLVMTest}
+# copy  ${LLVMObjects} into ${LLVMTest} so we don't have to rebuild everything
+# cp ${LLVMObjects} --force  --recursive --reflink=auto ${LLVMTest}
+cd ${LLVMTest}
 
-nice -n 15 ninja-build -l $procs -j $procs check-all
-echo "stage 2 done"
+cmake ../llvm -G "Ninja" \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DLLVM_BINUTILS_INCDIR=/usr/include \
+	-DCMAKE_C_FLAGS="-march=native -O3  -g0 -DNDEBUG" \
+	-DCMAKE_CXX_FLAGS="-march=native -O3  -g0 -DNDEBUG" \
+	-DLLVM_PARALLEL_LINK_JOBS=3 \
+	-DLLVM_OPTIMIZED_TABLEGEN=1 \
+	-DLLVM_TARGETS_TO_BUILD="X86" \
+	-DLLVM_ENABLE_LTO="Full" \
+	-DCMAKE_AR="${rootDir}/stage_1/build/bin/llvm-ar" \
+	-DCMAKE_RANLIB="${rootDir}/stage_1/build/bin/llvm-ranlib" \
+	-DLLVM_USE_LINKER="${rootDir}/stage_1/build/bin/ld.lld"  \
+
+echo "Building and running tests."
+
+
+# build and run tests now
+nice -n 15 ninja-build -l $procs -j $procs check-all  || exit
+echo "stage 2 done, tests run"
