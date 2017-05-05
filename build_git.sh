@@ -214,6 +214,7 @@ mkdir -p ${LLVMTest}
 # cp ${LLVMObjects} --force  --recursive --reflink=auto ${LLVMTest}
 cd ${LLVMTest}
 
+echo "Configuring tests"
 cmake ../llvm -G "Ninja" \
 	-DCMAKE_BUILD_TYPE=Release \
 	-DLLVM_BINUTILS_INCDIR=/usr/include \
