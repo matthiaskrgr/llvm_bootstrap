@@ -222,7 +222,6 @@ cmake ../llvm -G "Ninja" \
 	-DCMAKE_CXX_FLAGS="-march=native -O3  -g0 -DNDEBUG" \
 	-DLLVM_PARALLEL_LINK_JOBS=2 \
 	-DLLVM_OPTIMIZED_TABLEGEN=1 \
-	-DLLVM_TARGETS_TO_BUILD="X86" \
 	-DLLVM_ENABLE_LTO="Full" \
 	-DCMAKE_AR="${rootDir}/stage_1/build/bin/llvm-ar" \
 	-DCMAKE_RANLIB="${rootDir}/stage_1/build/bin/llvm-ranlib" \
