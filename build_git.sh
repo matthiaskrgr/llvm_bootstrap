@@ -26,10 +26,10 @@ export CXX=clang++
 export CC=clang
 
 
-echo "Cloning/updating repos..."
+echo -e "\e[95mCloning/updating repos...\e[39m"
 
 
-echo llvm
+echo -e "\e[95mllvm\e[39m"
 if ! test -d ${LLVMSrc}; then
 	git clone http://llvm.org/git/llvm.git ${LLVMSrc}
 else
@@ -37,7 +37,7 @@ else
 	git pull
 fi
 
-echo clang
+echo -e "\e[95mclang\e[39m"
 if ! test -d ${clangSrc}; then
 	git clone http://llvm.org/git/clang.git ${clangSrc}
 else
@@ -45,7 +45,7 @@ else
 	git pull
 fi
 
-echo clang-tools-extra
+echo -e "\e[95mclang-tools-extra\e[39m"
 if ! test -d ${toolsExtraSrc}; then
 	git clone http://llvm.org/git/clang-tools-extra.git ${toolsExtraSrc}
 else
@@ -53,7 +53,7 @@ else
 	git pull
 fi
 
-echo compiler-rt
+echo -e "\e[95mcompiler-rt\e[39m"
 if ! test -d ${compilerRTSrc}; then
     git clone http://llvm.org/git/compiler-rt.git ${compilerRTSrc}
 else
@@ -61,7 +61,7 @@ else
 	git pull
 fi
 
-echo polly
+echo -e "\e[95mpolly\e[39m"
 if ! test -d ${pollySrc}; then
 	git clone http://llvm.org/git/polly.git ${pollySrc}
 else
@@ -69,7 +69,7 @@ else
 	git pull
 fi
 
-echo lld
+echo -e "\e[95mlld\e[39m"
 if ! test -d ${lldSRC}; then
 	git clone http://llvm.org/git/lld.git ${lldSRC}
 else
@@ -93,7 +93,7 @@ cmake ../llvm -G "Ninja" \
 	-DLLVM_BUILD_TOOLS=0 
 
 nice -n 15 ninja-build -l $procs -j $procs clang LLVMgold llvm-ar llvm-ranlib lld || exit
-echo "stage 1 done"
+echo -e "\e[95mstage 1 done\e[39m"
 
 # clang compiled with system clang is done
 # now, compile clang again with the newly built version
@@ -117,7 +117,7 @@ export LLVMTest=${stageBase}/test       # compile and exec tests here
 
 # we can simply clone from local to local repo, no need to pull everything from the net again
 
-echo llvm
+echo -e "\e[95mllvm\e[39m"
 if ! test -d ${LLVMSrc}; then
     git clone ${cloneRoot}/llvm ${LLVMSrc}
 else
@@ -125,7 +125,7 @@ else
 	git pull
 fi
 
-echo clang
+echo -e "\e[95mclang\e[39m"
 if ! test -d ${clangSrc}; then
 	git clone ${cloneRoot}/llvm/tools/clang ${clangSrc}
 else
@@ -133,7 +133,7 @@ else
 	git pull
 fi
 
-echo tools
+echo -e "\e[95mclang-tools-extra\e[39m"
 if ! test -d ${toolsExtraSrc}; then
 	git clone ${cloneRoot}/llvm/tools/clang/tools/extra ${toolsExtraSrc}
 else
@@ -141,7 +141,7 @@ else
 	git pull
 fi
 
-echo copiler-rt
+echo -e "\e[95mcompiler-rt\e[39m"
 if ! test -d ${compilerRTSrc}; then
 	git clone  ${cloneRoot}/llvm/projects/compiler-rt ${compilerRTSrc}
 else
@@ -149,7 +149,7 @@ else
 	git pull
 fi
 
-echo polly
+echo -e "\e[95mpolly\e[39m"
 if ! test -d ${pollySrc}; then
 	git clone  ${cloneRoot}/llvm/tools/polly ${pollySrc}
 else
@@ -157,7 +157,7 @@ else
 	git pull
 fi
 
-echo lld
+echo -e "\e[95mlld\e[39m"
 if ! test -d ${lldSRC}; then
 	git clone  ${cloneRoot}/llvm/tools/lld ${lldSRC}
 else
@@ -192,8 +192,8 @@ export TARGETS=" clang LLVMgold asan ubsan scan-build llvm-objdump llvm-opt-repo
 
 
 nice -n 15 ninja-build -l $procs -j $procs ${TARGETS} || exit
-echo "Compiling done."
-echo "Installing..."
+echo -e "\e[95mCompiling done.\e[39m"
+echo -e "\e[95mInstalling...\e[39m"
 rm -rf ${LLVMBuild}
 mkdir -p ${LLVMBuild}
 cp ${LLVMObjects}/bin  --force  --recursive --reflink=auto --target-directory ${LLVMBuild}
@@ -201,7 +201,7 @@ mkdir ${LLVMBuild}/lib/
 cp ${LLVMObjects}/lib/clang  --force  --recursive --reflink=auto --target-directory ${LLVMBuild}/lib/
 cp `find . | grep "\.so"` --force  --recursive --reflink=auto --target-directory ${LLVMBuild}/lib/
 
-echo "Installing done."
+echo -e  "\e[95mInstalling done.\e[39m"
 # building this will take ages with lto, also take care having automatic core dumps disabled before running
 # to do this, find your /etc/systemd/coredump.conf
 # and add
@@ -214,7 +214,7 @@ mkdir -p ${LLVMTest}
 # cp ${LLVMObjects} --force  --recursive --reflink=auto ${LLVMTest}
 cd ${LLVMTest}
 
-echo "Configuring tests"
+echo -e "\e[95mConfiguring tests\e[39m"
 cmake ../llvm -G "Ninja" \
 	-DCMAKE_BUILD_TYPE=Release \
 	-DLLVM_BINUTILS_INCDIR=/usr/include \
@@ -227,9 +227,9 @@ cmake ../llvm -G "Ninja" \
 	-DCMAKE_RANLIB="${rootDir}/stage_1/build/bin/llvm-ranlib" \
 	-DLLVM_USE_LINKER="${rootDir}/stage_1/build/bin/ld.lld"  \
 
-echo "Building and running tests."
+echo -e "\e[95mBuilding and running tests.\e[39m"
 
 
 # build and run tests now
 nice -n 15 ninja-build -l $procs -j $procs check-all  || exit
-echo "stage 2 done, tests run"
+echo -e "\e[95mstage 2 done, tests run\e[39m"
