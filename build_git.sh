@@ -214,6 +214,10 @@ mkdir -p ${LLVMTest}
 # cp ${LLVMObjects} --force  --recursive --reflink=auto ${LLVMTest}
 cd ${LLVMTest}
 
+# use lto'd clang
+export CXX="${rootDir}/stage_2/build/bin/clang++"
+export CC="${rootDir}/stage_2/build/bin/clang"
+
 echo -e "\e[95mConfiguring tests\e[39m"
 cmake ../llvm -G "Ninja" \
 	-DCMAKE_BUILD_TYPE=Release \
@@ -223,9 +227,9 @@ cmake ../llvm -G "Ninja" \
 	-DLLVM_PARALLEL_LINK_JOBS=2 \
 	-DLLVM_OPTIMIZED_TABLEGEN=1 \
 	-DLLVM_ENABLE_LTO="Full" \
-	-DCMAKE_AR="${rootDir}/stage_1/build/bin/llvm-ar" \
-	-DCMAKE_RANLIB="${rootDir}/stage_1/build/bin/llvm-ranlib" \
-	-DLLVM_USE_LINKER="${rootDir}/stage_1/build/bin/ld.lld"  \
+	-DCMAKE_AR="${rootDir}/stage_2/build/bin/llvm-ar" \
+	-DCMAKE_RANLIB="${rootDir}/stage_2/build/bin/llvm-ranlib" \
+	-DLLVM_USE_LINKER="${rootDir}/stage_2/build/bin/ld.lld"  \
 
 echo -e "\e[95mBuilding and running tests.\e[39m"
 
