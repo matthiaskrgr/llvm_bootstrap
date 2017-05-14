@@ -222,14 +222,15 @@ echo -e "\e[95mConfiguring tests\e[39m"
 cmake ../llvm -G "Ninja" \
 	-DCMAKE_BUILD_TYPE=Release \
 	-DLLVM_BINUTILS_INCDIR=/usr/include \
-	-DCMAKE_C_FLAGS="-march=native -O3  -g0 -DNDEBUG" \
-	-DCMAKE_CXX_FLAGS="-march=native -O3  -g0 -DNDEBUG" \
+	-DCMAKE_C_FLAGS="-march=native -O3  -g0" \
+	-DCMAKE_CXX_FLAGS="-march=native -O3  -g0" \
 	-DLLVM_PARALLEL_LINK_JOBS=2 \
 	-DLLVM_OPTIMIZED_TABLEGEN=1 \
 	-DLLVM_ENABLE_LTO="Full" \
 	-DCMAKE_AR="${rootDir}/stage_2/build/bin/llvm-ar" \
 	-DCMAKE_RANLIB="${rootDir}/stage_2/build/bin/llvm-ranlib" \
-	-DLLVM_USE_LINKER="${rootDir}/stage_2/build/bin/ld.lld"  \
+	-DLLVM_USE_LINKER="${rootDir}/stage_2/build/bin/ld.lld" \
+	-DLLVM_ENABLE_EXPENSIVE_CHECKS=1 \
 
 echo -e "\e[95mBuilding and running tests.\e[39m"
 
