@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # This script bootstraps llvm, clang and friends in optimized way
-# requires gold linker (for lto) http://llvm.org/docs/GoldPlugin.html 
+# requires gold linker (for lto) http://llvm.org/docs/GoldPlugin.html
 # and ninja https://ninja-build.org/
 
 procs=3 #number of jobs to run at a time
@@ -199,6 +199,8 @@ mkdir -p ${LLVMBuild}
 cp ${LLVMObjects}/bin  --force  --recursive --reflink=auto --target-directory ${LLVMBuild}
 mkdir ${LLVMBuild}/lib/
 cp ${LLVMObjects}/lib/clang  --force  --recursive --reflink=auto --target-directory ${LLVMBuild}/lib/
+# @TODO less hacky way to do this:
+cp ${LLVMObjects}/libexec/* --force  --recursive --reflink=auto --target-directory ${LLVMBuild}/bin/
 cp `find . | grep "\.so"` --force  --recursive --reflink=auto --target-directory ${LLVMBuild}/lib/
 
 echo -e  "\e[95mInstalling done.\e[39m"
@@ -236,5 +238,5 @@ echo -e "\e[95mBuilding and running tests.\e[39m"
 
 
 # build and run tests now
-nice -n 15 ninja-build -l $procs -j $procs check-all  || exit
+ASAN_OPTIONS=detect_odr_violation=0 nice -n 15 ninja-build -l $procs -j $procs check-all  || exit
 echo -e "\e[95mstage 2 done, tests run\e[39m"
