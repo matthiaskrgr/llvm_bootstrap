@@ -1,4 +1,5 @@
 #!/bin/bash
+#set -x
 
 # This script bootstraps llvm, clang and friends in optimized way
 # requires gold linker (for lto) http://llvm.org/docs/GoldPlugin.html
@@ -7,6 +8,10 @@
 procs=3 #number of jobs to run at a time
 export CCACHE_DISABLE=1 #disable ccache
 rootDir=`pwd` #cwd
+
+echo "Latest builds of buildslave http://lab.llvm.org:8011/builders/clang-with-lto-ubuntu"
+# relative paths and symlinks don't mix well, hack around
+python3 `readlink $0 | sed s@build_git.sh@BB_status.py@`
 
 mkdir -p  stage_1
 cd stage_1
