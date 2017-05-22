@@ -243,5 +243,6 @@ echo -e "\e[95mBuilding and running tests.\e[39m"
 
 
 # build and run tests now
-ASAN_OPTIONS=detect_odr_violation=0 nice -n 15 ninja-build -l $procs -j $procs check-all  || exit
+# export  ASAN_OPTIONS=detect_odr_violation=0
+nice -n 15 ninja-build -l $procs -j $procs check-all  || exit
 echo -e "\e[95mstage 2 done, tests run\e[39m"
