@@ -23,6 +23,6 @@ for buildNr in reversed(j['cachedBuilds'][-5:]): # last 5 buids
 		end_time = datetime.datetime.fromtimestamp(float(times[1])).strftime('%H:%M:%S')
 
 	if (txt):
-		print(str(buildNr) + ": " + txt[0] + "\t" + txt[1] + " " + start_time + " - " + end_time)
+		print(str(buildNr) + ": " + txt[0] + "\t" + txt[1] + " \t" + start_time + " - " + end_time)
 	else:  # build still in progress
-		print(str(buildNr) + " " + start_time + " - " + end_time)
+		print(str(buildNr) + ": build\trunning \t" + start_time + " - " + end_time)
