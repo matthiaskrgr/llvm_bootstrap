@@ -229,8 +229,8 @@ echo -e "\e[95mConfiguring tests\e[39m"
 cmake ../llvm -G "Ninja" \
 	-DCMAKE_BUILD_TYPE=Release \
 	-DLLVM_BINUTILS_INCDIR=/usr/include \
-	-DCMAKE_C_FLAGS="-march=native -O3  -g0" \
-	-DCMAKE_CXX_FLAGS="-march=native -O3  -g0" \
+	-DCMAKE_C_FLAGS="-O3  -g0" \
+	-DCMAKE_CXX_FLAGS="-O3  -g0" \
 	-DLLVM_PARALLEL_LINK_JOBS=2 \
 	-DLLVM_OPTIMIZED_TABLEGEN=1 \
 	-DLLVM_ENABLE_LTO="Full" \
