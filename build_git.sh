@@ -23,6 +23,8 @@ export toolsExtraSrc=${LLVMSrc}/tools/clang/tools/extra #tools
 export compilerRTSrc=${LLVMSrc}/projects/compiler-rt #sanitizers
 export pollySrc=${LLVMSrc}/tools/polly #polly
 export lldSRC=${stageBase}/llvm/tools/lld #lld linker
+export lldbSRC=${stageBase}/llvm/tools/lldb #lldb debugger
+
 
 # build dir
 export LLVMBuild=${stageBase}/build
@@ -82,6 +84,15 @@ else
 	git pull
 fi
 
+echo -e "\e[95mlldb\e[39m"
+if ! test -d ${lldbSRC}; then
+	git clone http://llvm.org/git/lldb.git ${lldbSRC}
+else
+	cd ${lldbSRC}
+	git pull
+fi
+
+
 # start building
 
 mkdir -p ${LLVMBuild}
@@ -114,6 +125,8 @@ export toolsExtraSrc=${LLVMSrc}/tools/clang/tools/extra
 export compilerRTSrc=${stageBase}/llvm/projects/compiler-rt
 export pollySrc=${stageBase}/llvm/tools/polly
 export lldSRC=${stageBase}/llvm/tools/lld
+export lldbSRC=${stageBase}/llvm/tools/lldb
+
 
 export LLVMObjects=${stageBase}/objects # build in here
 export LLVMBuild=${stageBase}/build     # make install into here
@@ -170,7 +183,13 @@ else
 	git pull
 fi
 
-
+echo -e "\e[95mlldb\e[39m"
+if ! test -d ${lldbSRC}; then
+	git clone  ${cloneRoot}/llvm/tools/lldb ${lldbSRC}
+else
+	cd ${lldbSRC}
+	git pull
+fi
 
 # use new clang++
 export CXX="${rootDir}/stage_1/build/bin/clang++"
@@ -192,7 +211,7 @@ cmake ../llvm -G "Ninja" \
 	-DCMAKE_RANLIB="${rootDir}/stage_1/build/bin/llvm-ranlib" \
 	-DLLVM_USE_LINKER="${rootDir}/stage_1/build/bin/ld.lld"  \
 
-export TARGETS=" clang LLVMgold asan ubsan scan-build llvm-objdump llvm-opt-report compiler-rt lld llvm-ar llvm-ranlib bugpoint llvm-stress llc llvm-profdata"
+export TARGETS=" clang LLVMgold asan ubsan scan-build llvm-objdump llvm-opt-report compiler-rt lld llvm-ar llvm-ranlib bugpoint llvm-stress llc llvm-profdata lldb"
 
 
 
