@@ -109,7 +109,10 @@ cmake ../llvm -G "Ninja" \
 	-DLLVM_BUILD_TOOLS=0 
 
 nice -n 15 ninja-build -l $procs -j $procs clang LLVMgold llvm-ar llvm-ranlib lld || exit
+echo -e "\e[95mrunning stage 1 tests\e[39m"
+nice -n 15 ninja-build -l $procs -j $procs check-llvm check-clang  check-lld || exit
 echo -e "\e[95mstage 1 done\e[39m"
+
 
 # clang compiled with system clang is done
 # now, compile clang again with the newly built version
