@@ -238,14 +238,89 @@ echo -e  "\e[95mInstalling done.\e[39m"
 # [Coredump]
 # Storage=none
 #
-mkdir -p ${LLVMTest}
-# copy  ${LLVMObjects} into ${LLVMTest} so we don't have to rebuild everything
-# cp ${LLVMObjects} --force  --recursive --reflink=auto ${LLVMTest}
-cd ${LLVMTest}
 
-# use lto'd clang
+# stage 2 is done.
+# we can run tests now (stage 3)
+
+cd ${rootDir}
+
+export cloneRoot=${rootDir}/stage_2/
+mkdir -p stage_3_tests
+cd stage_3_tests
+export stageBase=`pwd`
+export LLVMSrc=${stageBase}/llvm
+export clangSrc=${LLVMSrc}/tools/clang
+export toolsExtraSrc=${LLVMSrc}/tools/clang/tools/extra
+export compilerRTSrc=${stageBase}/llvm/projects/compiler-rt
+export pollySrc=${stageBase}/llvm/tools/polly
+export lldSRC=${stageBase}/llvm/tools/lld
+export lldbSRC=${stageBase}/llvm/tools/lldb
+
+
+export LLVMObjects=${stageBase}/objects # build in here
+
+
+echo -e "\e[95mllvm\e[39m"
+if ! test -d ${LLVMSrc}; then
+    git clone ${cloneRoot}/llvm ${LLVMSrc}
+else
+	cd ${LLVMSrc}
+	git pull
+fi
+
+echo -e "\e[95mclang\e[39m"
+if ! test -d ${clangSrc}; then
+	git clone ${cloneRoot}/llvm/tools/clang ${clangSrc}
+else
+	cd ${clangSrc}
+	git pull
+fi
+
+echo -e "\e[95mclang-tools-extra\e[39m"
+if ! test -d ${toolsExtraSrc}; then
+	git clone ${cloneRoot}/llvm/tools/clang/tools/extra ${toolsExtraSrc}
+else
+	cd ${toolsExtraSrc}
+	git pull
+fi
+
+echo -e "\e[95mcompiler-rt\e[39m"
+if ! test -d ${compilerRTSrc}; then
+	git clone  ${cloneRoot}/llvm/projects/compiler-rt ${compilerRTSrc}
+else
+	cd ${compilerRTSrc}
+	git pull
+fi
+
+echo -e "\e[95mpolly\e[39m"
+if ! test -d ${pollySrc}; then
+	git clone  ${cloneRoot}/llvm/tools/polly ${pollySrc}
+else
+	cd ${pollySrc}
+	git pull
+fi
+
+echo -e "\e[95mlld\e[39m"
+if ! test -d ${lldSRC}; then
+	git clone  ${cloneRoot}/llvm/tools/lld ${lldSRC}
+else
+	cd ${lldSRC}
+	git pull
+fi
+
+echo -e "\e[95mlldb\e[39m"
+if ! test -d ${lldbSRC}; then
+	git clone  ${cloneRoot}/llvm/tools/lldb ${lldbSRC}
+else
+	cd ${lldbSRC}
+	git pull
+fi
+
+# use optimized stage 2 clang++
 export CXX="${rootDir}/stage_2/build/bin/clang++"
 export CC="${rootDir}/stage_2/build/bin/clang"
+mkdir -p ${LLVMObjects}
+cd ${LLVMObjects}
 
 echo -e "\e[95mConfiguring tests\e[39m"
 cmake ../llvm -G "Ninja" \
@@ -267,4 +342,4 @@ echo -e "\e[95mBuilding and running tests.\e[39m"
 # build and run tests now
 # export  ASAN_OPTIONS=detect_odr_violation=0
 nice -n 15 ninja-build -l $procs -j $procs check-all  || exit
-echo -e "\e[95mstage 2 done, tests run\e[39m"
+echo -e "\e[95mstage 3 testing done, tests run\e[39m"
