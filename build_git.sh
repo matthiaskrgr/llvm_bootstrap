@@ -24,6 +24,7 @@ export compilerRTSrc=${LLVMSrc}/projects/compiler-rt #sanitizers
 export pollySrc=${LLVMSrc}/tools/polly #polly
 export lldSRC=${LLVMSrc}/tools/lld #lld linker
 export lldbSRC=${LLVMSrc}/tools/lldb #lldb debugger
+export openmpSrc=${LLVMSrc}/tools/openmp #lldb debugger
 
 
 # build dir
@@ -93,7 +94,13 @@ else
 fi
 
 
-
+echo -e "\e[95mopenMP\e[39m"
+if ! test -d ${openmpSrc}; then
+	git clone http://llvm.org/git/openmp.git ${openmpSrc}
+else
+	cd ${openmpSrc}
+	git pull
+fi
 
 
 # start building
@@ -132,6 +139,7 @@ export compilerRTSrc=${stageBase}/llvm/projects/compiler-rt
 export pollySrc=${stageBase}/llvm/tools/polly
 export lldSRC=${stageBase}/llvm/tools/lld
 export lldbSRC=${stageBase}/llvm/tools/lldb
+export openmpSrc=${LLVMSrc}/tools/openmp 
 
 
 export LLVMObjects=${stageBase}/objects # build in here
@@ -197,6 +205,14 @@ else
 	git pull
 fi
 
+echo -e "\e[95mopenMP\e[39m"
+if ! test -d ${openmpSrc}; then
+	git clone  ${cloneRoot}/llvm/tools/openmp ${openmpSrc}
+else
+	cd ${openmpSrc}
+	git pull
+fi
+
 # use new clang++
 export CXX="${rootDir}/stage_1/build/bin/clang++"
 export CC="${rootDir}/stage_1/build/bin/clang"
@@ -259,6 +275,8 @@ export pollySrc=${stageBase}/llvm/tools/polly
 export lldSRC=${stageBase}/llvm/tools/lld
 export lldbSRC=${stageBase}/llvm/tools/lldb
 export debuginfoTestsSrc=${LLVMSrc}/tools/clang/test/debuginfo-tests #clang debuginfo tests 
+export openmpSrc=${LLVMSrc}/tools/openmp 
+
 
 export LLVMObjects=${stageBase}/objects # build in here
 
@@ -324,6 +342,14 @@ if ! test -d ${debuginfoTestsSrc}; then
 	git clone http://llvm.org/git/debuginfo-tests.git ${debuginfoTestsSrc}
 else
 	cd ${debuginfoTestsSrc}
+	git pull
+fi
+
+echo -e "\e[95mopenMP\e[39m"
+if ! test -d ${openmpSrc}; then
+	git clone  ${cloneRoot}/llvm/tools/openmp ${openmpSrc}
+else
+	cd ${openmpSrc}
 	git pull
 fi
 
