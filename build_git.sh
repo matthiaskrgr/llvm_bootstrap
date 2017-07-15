@@ -22,8 +22,8 @@ export clangSrc=${LLVMSrc}/tools/clang  #clang
 export toolsExtraSrc=${LLVMSrc}/tools/clang/tools/extra #tools
 export compilerRTSrc=${LLVMSrc}/projects/compiler-rt #sanitizers
 export pollySrc=${LLVMSrc}/tools/polly #polly
-export lldSRC=${stageBase}/llvm/tools/lld #lld linker
-export lldbSRC=${stageBase}/llvm/tools/lldb #lldb debugger
+export lldSRC=${LLVMSrc}/tools/lld #lld linker
+export lldbSRC=${LLVMSrc}/tools/lldb #lldb debugger
 
 
 # build dir
@@ -93,6 +93,9 @@ else
 fi
 
 
+
+
+
 # start building
 
 mkdir -p ${LLVMBuild}
@@ -110,7 +113,7 @@ cmake ../llvm -G "Ninja" \
 
 nice -n 15 ninja-build -l $procs -j $procs clang LLVMgold llvm-ar llvm-ranlib lld || exit
 echo -e "\e[95mrunning stage 1 tests\e[39m"
-nice -n 15 ninja-build -l $procs -j $procs check-llvm check-clang  check-lld || exit
+nice -n 15 ninja-build -l $procs -j $procs check-llvm check-clang check-lld || exit
 echo -e "\e[95mstage 1 done\e[39m"
 
 
@@ -255,7 +258,7 @@ export compilerRTSrc=${stageBase}/llvm/projects/compiler-rt
 export pollySrc=${stageBase}/llvm/tools/polly
 export lldSRC=${stageBase}/llvm/tools/lld
 export lldbSRC=${stageBase}/llvm/tools/lldb
-
+export debuginfoTestsSrc=${LLVMSrc}/tools/clang/test/debuginfo-tests #clang debuginfo tests 
 
 export LLVMObjects=${stageBase}/objects # build in here
 
@@ -313,6 +316,14 @@ if ! test -d ${lldbSRC}; then
 	git clone  ${cloneRoot}/llvm/tools/lldb ${lldbSRC}
 else
 	cd ${lldbSRC}
+	git pull
+fi
+
+echo -e "\e[95mdebuginfo-tests\e[39m"
+if ! test -d ${debuginfoTestsSrc}; then
+	git clone http://llvm.org/git/debuginfo-tests.git ${debuginfoTestsSrc}
+else
+	cd ${debuginfoTestsSrc}
 	git pull
 fi
 
