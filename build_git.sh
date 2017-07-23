@@ -117,6 +117,7 @@ cmake ../llvm -G "Ninja" \
 	-DLLVM_TARGETS_TO_BUILD="X86" \
 	-DLLVM_OPTIMIZED_TABLEGEN=1 \
 	-DLLVM_BUILD_TOOLS=0 
+echo -e "\e[95mbuilding stage 1\e[39m"
 
 nice -n 15 ninja-build -l $procs -j $procs clang LLVMgold llvm-ar llvm-ranlib lld || exit
 echo -e "\e[95mrunning stage 1 tests\e[39m"
@@ -236,7 +237,7 @@ cmake ../llvm -G "Ninja" \
 export TARGETS=" clang LLVMgold asan ubsan scan-build llvm-objdump llvm-opt-report compiler-rt lld llvm-ar llvm-ranlib bugpoint llvm-stress llc llvm-profdata lldb"
 
 
-
+echo -e "\e[95mBuilding stage 2\e[39m"
 nice -n 15 ninja-build -l $procs -j $procs ${TARGETS} || exit
 echo -e "\e[95mCompiling done.\e[39m"
 echo -e "\e[95mInstalling...\e[39m"
@@ -373,10 +374,10 @@ cmake ../llvm -G "Ninja" \
 	-DLLVM_USE_LINKER="${rootDir}/stage_2/build/bin/ld.lld" \
 	-DLLVM_ENABLE_EXPENSIVE_CHECKS=1 \
 
-echo -e "\e[95mBuilding and running tests.\e[39m"
+echo -e "\e[95mBuilding and running stage 3 tests.\e[39m"
 
 
 # build and run tests now
 # export  ASAN_OPTIONS=detect_odr_violation=0
 nice -n 15 ninja-build -l $procs -j $procs check-all  || exit
-echo -e "\e[95mstage 3 testing done, tests run\e[39m"
+echo -e "\e[95mstage 3 testing done, tests passed\e[39m"
