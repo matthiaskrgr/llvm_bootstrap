@@ -233,22 +233,19 @@ cmake ../llvm -G "Ninja" \
 	-DCMAKE_AR="${rootDir}/stage_1/build/bin/llvm-ar" \
 	-DCMAKE_RANLIB="${rootDir}/stage_1/build/bin/llvm-ranlib" \
 	-DLLVM_USE_LINKER="${rootDir}/stage_1/build/bin/ld.lld"  \
+    -DCMAKE_INSTALL_PREFIX="${stageBase}/build/" \
+    -DLLVM_LIBDIR_SUFFIX=64 \
 
-export TARGETS=" clang LLVMgold asan ubsan scan-build llvm-objdump llvm-opt-report compiler-rt lld llvm-ar llvm-ranlib bugpoint llvm-stress llc llvm-profdata lldb"
+export stage2_install_dir=${LLVMBuild}
 
 
 echo -e "\e[95mBuilding stage 2\e[39m"
-nice -n 15 ninja-build -l $procs -j $procs ${TARGETS} || exit
+nice -n 15 ninja-build -l $procs -j $procs all || exit
+
 echo -e "\e[95mCompiling done.\e[39m"
 echo -e "\e[95mInstalling...\e[39m"
 rm -rf ${LLVMBuild}
-mkdir -p ${LLVMBuild}
-cp ${LLVMObjects}/bin  --force  --recursive --reflink=auto --target-directory ${LLVMBuild}
-mkdir ${LLVMBuild}/lib/
-cp ${LLVMObjects}/lib/clang  --force  --recursive --reflink=auto --target-directory ${LLVMBuild}/lib/
-# @TODO less hacky way to do this:
-cp ${LLVMObjects}/libexec/* --force  --recursive --reflink=auto --target-directory ${LLVMBuild}/bin/
-cp `find . | grep "\.so"` --force  --recursive --reflink=auto --target-directory ${LLVMBuild}/lib/
+nice -n 15 ninja-build -l $procs -j $procs install || exit
 
 echo -e  "\e[95mInstalling done.\e[39m"
 # building this will take ages with lto, also take care having automatic core dumps disabled before running
