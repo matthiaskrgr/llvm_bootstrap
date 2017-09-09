@@ -128,8 +128,6 @@ echo -e "\e[95mrunning stage 1 tests\e[39m"
 nice -n 15 ninja-build -l $procs -j $procs check-llvm check-clang check-lld || exit
 echo -e "\e[95mstage 1 done\e[39m"
 
-exit
-
 # clang compiled with system clang is done
 # now, compile clang again with the newly built version
 cd ${rootDir}
@@ -159,7 +157,7 @@ export LLVMBuild=${stageBase}/build     # make install into here
 export CXX="${rootDir}/stage_1/build/bin/clang++"
 export CC="${rootDir}/stage_1/build/bin/clang"
 mkdir -p ${LLVMObjects}
-cd ${LLVMBuild}
+cd ${LLVMObjects}
 
 
 cmake ../llvm -G "Ninja" \
@@ -186,6 +184,7 @@ nice -n 15 ninja-build -l $procs -j $procs install || exit
 echo -e  "Installing done"
 echo "stage 2 done"
 
+cd ${rootDir}
 
 echo "stage 3 tests"
 mkdir -p stage_3_tests
