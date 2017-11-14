@@ -369,7 +369,9 @@ cmake ../llvm -G "Ninja" \
 	-DCMAKE_AR="${rootDir}/stage_2/build/bin/llvm-ar" \
 	-DCMAKE_RANLIB="${rootDir}/stage_2/build/bin/llvm-ranlib" \
 	-DLLVM_USE_LINKER="${rootDir}/stage_2/build/bin/ld.lld" \
-	-DLLVM_ENABLE_EXPENSIVE_CHECKS=1 \
+	-DLLVM_ENABLE_EXPENSIVE_CHECKS=1  \
+    -DLLDB_TEST_C_COMPILER="${rootDir}/stage_3/build/bin/clang" \
+    -DLLDB_TEST_CXX_COMPILER="${rootDir}/stage_3/build/bin/clang++"
 
 echo -e "\e[95mBuilding and running stage 3 tests.\e[39m"
 
