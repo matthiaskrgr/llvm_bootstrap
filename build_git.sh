@@ -371,7 +371,8 @@ cmake ../llvm -G "Ninja" \
 	-DLLVM_USE_LINKER="${rootDir}/stage_2/build/bin/ld.lld" \
 	-DLLVM_ENABLE_EXPENSIVE_CHECKS=1  \
     -DLLDB_TEST_C_COMPILER="${rootDir}/stage_3/build/bin/clang" \
-    -DLLDB_TEST_CXX_COMPILER="${rootDir}/stage_3/build/bin/clang++"
+    -DLLDB_TEST_CXX_COMPILER="${rootDir}/stage_3/build/bin/clang++" \
+    -DLLVM_ENABLE_ASSERTIONS=1 
 
 echo -e "\e[95mBuilding and running stage 3 tests.\e[39m"
 
