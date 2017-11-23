@@ -363,7 +363,7 @@ cmake ../llvm -G "Ninja" \
 	-DLLVM_BINUTILS_INCDIR=/usr/include \
 	-DCMAKE_C_FLAGS="-O3  -g0" \
 	-DCMAKE_CXX_FLAGS="-O3  -g0" \
-	-DLLVM_PARALLEL_LINK_JOBS=2 \
+	-DLLVM_PARALLEL_LINK_JOBS=1 \
 	-DLLVM_OPTIMIZED_TABLEGEN=1 \
 	-DLLVM_ENABLE_LTO="Full" \
 	-DCMAKE_AR="${rootDir}/stage_2/build/bin/llvm-ar" \
