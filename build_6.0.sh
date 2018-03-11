@@ -123,9 +123,9 @@ cmake ../llvm -G "Ninja" \
 
 
 echo -e "\e[95mbuilding stage 1\e[39m"
-nice -n 15 ninja-build -l $procs -j $procs clang LLVMgold llvm-ar llvm-ranlib lld || exit
+nice -n 15 ninja -l $procs -j $procs clang LLVMgold llvm-ar llvm-ranlib lld || exit
 echo -e "\e[95mrunning stage 1 tests\e[39m"
-nice -n 15 ninja-build -l $procs -j $procs check-llvm check-clang check-lld || exit
+nice -n 15 ninja -l $procs -j $procs check-llvm check-clang check-lld || exit
 echo -e "\e[95mstage 1 done\e[39m"
 
 # clang compiled with system clang is done
@@ -176,11 +176,11 @@ cmake ../llvm -G "Ninja" \
     -DLLVM_LIBDIR_SUFFIX=64 \
 
 echo "building stage 2"
-nice -n 15 ninja-build -l $procs -j $procs all || exit
+nice -n 15 ninja -l $procs -j $procs all || exit
 #echo "clearning install dir"
 #rm -r "${LLVMBuild}"
 echo "installing stage 2"
-nice -n 15 ninja-build -l $procs -j $procs install || exit
+nice -n 15 ninja -l $procs -j $procs install || exit
 echo -e  "Installing done"
 echo "stage 2 done"
 
@@ -228,5 +228,5 @@ cmake ../llvm -G "Ninja" \
 	-DLLVM_ENABLE_EXPENSIVE_CHECKS=1 \
 
 
-nice -n 15 ninja-build -l $procs -j $procs check-all  || exit
+nice -n 15 ninja -l $procs -j $procs check-all  || exit
 echo -e "\e[95mstage 3 testing done, tests passed\e[39m"
