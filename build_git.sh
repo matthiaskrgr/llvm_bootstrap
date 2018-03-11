@@ -10,8 +10,8 @@ export CCACHE_DISABLE=1 #disable ccache
 rootDir=`pwd` #cwd
 
 echo "Latest builds of buildslave http://lab.llvm.org:8011/builders/clang-with-lto-ubuntu"
-# relative paths and symlinks don't mix well, hack around
-python3 `readlink $0 | sed s@build_git.sh@BB_status.py@`
+
+python3 ~/llvm_bootstrap/BB_status.py
 
 mkdir -p  stage_1
 cd stage_1
@@ -119,9 +119,9 @@ cmake ../llvm -G "Ninja" \
 	-DLLVM_BUILD_TOOLS=0 
 echo -e "\e[95mbuilding stage 1\e[39m"
 
-nice -n 15 ninja-build -l $procs -j $procs clang LLVMgold llvm-ar llvm-ranlib lld || exit
+nice -n 15 ninja -l $procs -j $procs clang LLVMgold llvm-ar llvm-ranlib lld || exit
 echo -e "\e[95mrunning stage 1 tests\e[39m"
-nice -n 15 ninja-build -l $procs -j $procs check-llvm check-clang check-lld || exit
+nice -n 15 ninja -l $procs -j $procs check-llvm check-clang check-lld || exit
 echo -e "\e[95mstage 1 done\e[39m"
 
 
@@ -234,18 +234,18 @@ cmake ../llvm -G "Ninja" \
 	-DCMAKE_RANLIB="${rootDir}/stage_1/build/bin/llvm-ranlib" \
 	-DLLVM_USE_LINKER="${rootDir}/stage_1/build/bin/ld.lld"  \
     -DCMAKE_INSTALL_PREFIX="${stageBase}/build/" \
-    -DLLVM_LIBDIR_SUFFIX=64 \
+    -DLLVM_LIBDIR_SUFFIX="" 
 
 export stage2_install_dir=${LLVMBuild}
 
 
 echo -e "\e[95mBuilding stage 2\e[39m"
-nice -n 15 ninja-build -l $procs -j $procs all || exit
+nice -n 15 ninja -l $procs -j $procs all || exit
 
 echo -e "\e[95mCompiling done.\e[39m"
 echo -e "\e[95mInstalling...\e[39m"
 rm -rf ${LLVMBuild}
-nice -n 15 ninja-build -l $procs -j $procs install || exit
+nice -n 15 ninja -l $procs -j $procs install || exit
 
 echo -e  "\e[95mInstalling done.\e[39m"
 # building this will take ages with lto, also take care having automatic core dumps disabled before running
@@ -363,7 +363,7 @@ cmake ../llvm -G "Ninja" \
 	-DLLVM_BINUTILS_INCDIR=/usr/include \
 	-DCMAKE_C_FLAGS="-O3  -g0" \
 	-DCMAKE_CXX_FLAGS="-O3  -g0" \
-	-DLLVM_PARALLEL_LINK_JOBS=1 \
+	-DLLVM_PARALLEL_LINK_JOBS=2 \
 	-DLLVM_OPTIMIZED_TABLEGEN=1 \
 	-DLLVM_ENABLE_LTO="Full" \
 	-DCMAKE_AR="${rootDir}/stage_2/build/bin/llvm-ar" \
@@ -379,5 +379,5 @@ echo -e "\e[95mBuilding and running stage 3 tests.\e[39m"
 
 # build and run tests now
 # export  ASAN_OPTIONS=detect_odr_violation=0
-nice -n 15 ninja-build -l $procs -j $procs check-all  || exit
+nice -n 15 ninja -l $procs -j $procs check-all  || exit
 echo -e "\e[95mstage 3 testing done, tests passed\e[39m"
