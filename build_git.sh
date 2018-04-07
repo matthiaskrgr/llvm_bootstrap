@@ -53,7 +53,8 @@ cmake ../${repoSrcStr}/llvm -G "Ninja" \
 	-DLLVM_TARGETS_TO_BUILD="X86" \
 	-DLLVM_OPTIMIZED_TABLEGEN=1 \
 	-DLLVM_BUILD_TOOLS=0 \
-	-DLLVM_ENABLE_PROJECTS="llvm;clang;lld"
+	-DLLVM_ENABLE_PROJECTS="llvm;clang;lld" \
+	-DLLVM_LIT_ARGS="--timeout 300 -sv"
 echo -e "\e[95mbuilding stage 1\e[39m"
 
 nice -n 15 ninja -l $procs -j $procs clang LLVMgold llvm-ar llvm-ranlib lld || exit
