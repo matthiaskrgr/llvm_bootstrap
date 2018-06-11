@@ -47,8 +47,8 @@ cd ${LLVMBuild}
 cmake ../${repoSrcStr}/llvm -G "Ninja" \
 	-DCMAKE_BUILD_TYPE=Release \
 	-DLLVM_BINUTILS_INCDIR=/usr/include \
-	-DCMAKE_C_FLAGS="-march=native -O3 -g0  -DNDEBUG" \
-	-DCMAKE_CXX_FLAGS="-march=native -O3 -g0  -DNDEBUG" \
+	-DCMAKE_C_FLAGS="-march=native -O3 -g0  -DNDEBUG -DNLLVM_DEBUG" \
+	-DCMAKE_CXX_FLAGS="-march=native -O3 -g0  -DNDEBUG -DNLLVM_DEBUG" \
 	-DLLVM_PARALLEL_LINK_JOBS=1 \
 	-DLLVM_TARGETS_TO_BUILD="X86" \
 	-DLLVM_OPTIMIZED_TABLEGEN=1 \
@@ -101,8 +101,8 @@ cd ${LLVMObjects}
 cmake ../${repoSrcStr}/llvm -G "Ninja" \
 	-DCMAKE_BUILD_TYPE=Release \
 	-DLLVM_BINUTILS_INCDIR=/usr/include \
-	-DCMAKE_C_FLAGS="-march=native -O3  -g0 -DNDEBUG" \
-	-DCMAKE_CXX_FLAGS="-march=native -O3  -g0 -DNDEBUG" \
+	-DCMAKE_C_FLAGS="-march=native -O3  -g0 -DNDEBUG -DNLLVM_DEBUG" \
+	-DCMAKE_CXX_FLAGS="-march=native -O3  -g0 -DNDEBUG -DNLLVM_DEBUG" \
 	-DLLVM_PARALLEL_LINK_JOBS=3 \
 	-DLLVM_OPTIMIZED_TABLEGEN=1 \
 	-DLLVM_TARGETS_TO_BUILD="X86" \
@@ -165,6 +165,15 @@ else
 	git pull
 fi
 
+export LLVMTestSuite=${LLVMSrc}/test-suite
+
+echo -e "\e[95mllvm tests-suite\e[39m"
+if ! test -d ${LLVMTestSuite}; then
+    git clone https://github.com/llvm-mirror/test-suite/ ${LLVMTestSuite}
+else
+	cd ${LLVMTestSuite}
+	git pull
+fi
 
 
 # use optimized stage 2 clang++
