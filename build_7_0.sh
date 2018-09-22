@@ -1,17 +1,15 @@
 #!/bin/bash
 VERSION="7.0.0"
-RC="rc2"
-VERSION="${VERSION}${RC}"
-#7.0.0rc2
+RC=""
 
 #get archives
-wget -c "http://prereleases.llvm.org/7.0.0/rc2/llvm-7.0.0rc2.src.tar.xz"
-wget -c "http://prereleases.llvm.org/7.0.0/rc2/cfe-7.0.0rc2.src.tar.xz"
-wget -c "http://prereleases.llvm.org/7.0.0/rc2/compiler-rt-7.0.0rc2.src.tar.xz"
-wget -c "http://prereleases.llvm.org/7.0.0/rc2/lld-7.0.0rc2.src.tar.xz"
-wget -c "http://prereleases.llvm.org/7.0.0/rc2/polly-7.0.0rc2.src.tar.xz"
-wget -c "http://prereleases.llvm.org/7.0.0/rc2/clang-tools-extra-7.0.0rc2.src.tar.xz"
-wget -c "http://prereleases.llvm.org/7.0.0/rc2/lldb-7.0.0rc2.src.tar.xz"
+wget -c "http://releases.llvm.org/${VERSION}/llvm-${VERSION}.src.tar.xz"
+wget -c "http://releases.llvm.org/${VERSION}/cfe-${VERSION}.src.tar.xz"
+wget -c "http://releases.llvm.org/${VERSION}/compiler-rt-${VERSION}.src.tar.xz"
+wget -c "http://releases.llvm.org/${VERSION}/lld-${VERSION}.src.tar.xz"
+wget -c "http://releases.llvm.org/${VERSION}/polly-${VERSION}.src.tar.xz"
+wget -c "http://releases.llvm.org/${VERSION}/clang-tools-extra-${VERSION}.src.tar.xz"
+wget -c "http://releases.llvm.org/${VERSION}/lldb-${VERSION}.src.tar.xz"
 
 # This script bootstraps llvm, clang and friends in optimized way
 # requires gold linker (for lto) http://llvm.org/docs/GoldPlugin.html
