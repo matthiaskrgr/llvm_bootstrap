@@ -103,16 +103,17 @@ cmake ../${repoSrcStr}/llvm -G "Ninja" \
 	-DLLVM_BINUTILS_INCDIR=/usr/include \
 	-DCMAKE_C_FLAGS="-march=native -O3  -g0 -DNDEBUG -DNLLVM_DEBUG" \
 	-DCMAKE_CXX_FLAGS="-march=native -O3  -g0 -DNDEBUG -DNLLVM_DEBUG" \
-	-DLLVM_PARALLEL_LINK_JOBS=3 \
+	-DLLVM_PARALLEL_LINK_JOBS=1 \
 	-DLLVM_OPTIMIZED_TABLEGEN=1 \
 	-DLLVM_TARGETS_TO_BUILD="X86" \
-	-DLLVM_ENABLE_LTO="Full" \
+	-DLLVM_ENABLE_LTO="Thin" \
 	-DCMAKE_AR="${rootDir}/stage_1/build/bin/llvm-ar" \
 	-DCMAKE_RANLIB="${rootDir}/stage_1/build/bin/llvm-ranlib" \
 	-DLLVM_USE_LINKER="${rootDir}/stage_1/build/bin/ld.lld"  \
     -DCMAKE_INSTALL_PREFIX="${stageBase}/build/" \
     -DLLVM_LIBDIR_SUFFIX="" \
-   	-DLLVM_ENABLE_PROJECTS="all"
+   	-DLLVM_ENABLE_PROJECTS="all" \
+    -DCMAKE_EXE_LINKER_FLAGS="-Wl,-thinlto-jobs=4 -Wl,-thinlto-cache-policy,cache_size_bytes=6g -Wl,-thinlto-cache-dir='${stageBase}/objects/thinlto_cache'" 
 
 
 
@@ -188,9 +189,9 @@ cmake ../${repoSrcStr}/llvm -G "Ninja" \
 	-DLLVM_BINUTILS_INCDIR=/usr/include \
 	-DCMAKE_C_FLAGS="-O3 -D_GLIBCXX_DEBUG -g0" \
 	-DCMAKE_CXX_FLAGS="-O3  -D_GLIBCXX_DEBUG -g0" \
-	-DLLVM_PARALLEL_LINK_JOBS=2 \
+	-DLLVM_PARALLEL_LINK_JOBS=1 \
 	-DLLVM_OPTIMIZED_TABLEGEN=1 \
-	-DLLVM_ENABLE_LTO="Full" \
+	-DLLVM_ENABLE_LTO="Thin" \
 	-DCMAKE_AR="${rootDir}/stage_2/build/bin/llvm-ar" \
 	-DCMAKE_RANLIB="${rootDir}/stage_2/build/bin/llvm-ranlib" \
 	-DLLVM_USE_LINKER="${rootDir}/stage_2/build/bin/ld.lld" \
@@ -199,8 +200,8 @@ cmake ../${repoSrcStr}/llvm -G "Ninja" \
     -DLLDB_TEST_CXX_COMPILER="${rootDir}/stage_3_tests/objects/bin/clang++" \
     -DLLVM_ENABLE_ASSERTIONS=1 \
    	-DLLVM_ENABLE_PROJECTS="all" \
-   	-DLLVM_LIT_ARGS="--timeout 300 -sv" 
-
+   	-DLLVM_LIT_ARGS="--timeout 300 -sv" \
+    -DCMAKE_EXE_LINKER_FLAGS="-Wl,-thinlto-jobs=4 -Wl,-thinlto-cache-policy,cache_size_bytes=6g -Wl,-thinlto-cache-dir='${stageBase}/objects/thinlto_cache'" 
 
 echo -e "\e[95mBuilding and running stage 3 tests.\e[39m"
 
