@@ -119,7 +119,9 @@ cmake ../llvm -G "Ninja" \
 	-DLLVM_PARALLEL_LINK_JOBS=1 \
 	-DLLVM_TARGETS_TO_BUILD="X86" \
 	-DLLVM_OPTIMIZED_TABLEGEN=1 \
-	-DLLVM_BUILD_TOOLS=0
+	-DLLVM_BUILD_TOOLS=0 \
+	-DCMAKE_EXE_LINKER_FLAGS="-Wl,-thinlto-jobs=4 -Wl,-thinlto-cache-policy,cache_size_bytes=6g -Wl,-thinlto-cache-dir='${stageBase}/objects/thinlto_cache'" \
+	-DLLVM_LIT_ARGS="--timeout 300 -sv" \
 
 
 echo -e "\e[95mbuilding stage 1\e[39m"
@@ -165,15 +167,17 @@ cmake ../llvm -G "Ninja" \
 	-DLLVM_BINUTILS_INCDIR=/usr/include \
 	-DCMAKE_C_FLAGS="-march=native -O3  -g0 -DNDEBUG" \
 	-DCMAKE_CXX_FLAGS="-march=native -O3  -g0 -DNDEBUG" \
-	-DLLVM_PARALLEL_LINK_JOBS=2 \
+	-DLLVM_PARALLEL_LINK_JOBS=1 \
 	-DLLVM_OPTIMIZED_TABLEGEN=1 \
 	-DLLVM_TARGETS_TO_BUILD="X86" \
-	-DLLVM_ENABLE_LTO="Full" \
+	-DLLVM_ENABLE_LTO="Thin" \
 	-DCMAKE_AR="${rootDir}/stage_1/build/bin/llvm-ar" \
 	-DCMAKE_RANLIB="${rootDir}/stage_1/build/bin/llvm-ranlib" \
 	-DLLVM_USE_LINKER="${rootDir}/stage_1/build/bin/ld.lld" \
     -DCMAKE_INSTALL_PREFIX="${LLVMBuild}" \
     -DLLVM_LIBDIR_SUFFIX=64 \
+    -DCMAKE_EXE_LINKER_FLAGS="-Wl,-thinlto-jobs=4 -Wl,-thinlto-cache-policy,cache_size_bytes=6g -Wl,-thinlto-cache-dir='${stageBase}/objects/thinlto_cache'" \
+    -DLLVM_LIT_ARGS="--timeout 300 -sv" \
 
 echo "building stage 2"
 nice -n 15 ninja -l $procs -j $procs all || exit
@@ -219,14 +223,15 @@ cmake ../llvm -G "Ninja" \
 	-DLLVM_BINUTILS_INCDIR=/usr/include \
 	-DCMAKE_C_FLAGS="-O3  -g0" \
 	-DCMAKE_CXX_FLAGS="-O3  -g0" \
-	-DLLVM_PARALLEL_LINK_JOBS=2 \
+	-DLLVM_PARALLEL_LINK_JOBS=1 \
 	-DLLVM_OPTIMIZED_TABLEGEN=1 \
-	-DLLVM_ENABLE_LTO="Full" \
+	-DLLVM_ENABLE_LTO="Thin" \
 	-DCMAKE_AR="${rootDir}/stage_2/build/bin/llvm-ar" \
 	-DCMAKE_RANLIB="${rootDir}/stage_2/build/bin/llvm-ranlib" \
 	-DLLVM_USE_LINKER="${rootDir}/stage_2/build/bin/ld.lld" \
 	-DLLVM_ENABLE_EXPENSIVE_CHECKS=1 \
-
+	-DCMAKE_EXE_LINKER_FLAGS="-Wl,-thinlto-jobs=4 -Wl,-thinlto-cache-policy,cache_size_bytes=6g -Wl,-thinlto-cache-dir='${stageBase}/objects/thinlto_cache'" \
+	-DLLVM_LIT_ARGS="--timeout 300 -sv" \
 
 nice -n 15 ninja -l $procs -j $procs check-all  || exit
 echo -e "\e[95mstage 3 testing done, tests passed\e[39m"
