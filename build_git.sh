@@ -113,6 +113,7 @@ cmake ../${repoSrcStr}/llvm -G "Ninja" \
     -DCMAKE_INSTALL_PREFIX="${stageBase}/build/" \
     -DLLVM_LIBDIR_SUFFIX="" \
    	-DLLVM_ENABLE_PROJECTS="all" \
+   	-DLLVM_TOOL_LLGO_BUILD=0 \
     -DCMAKE_EXE_LINKER_FLAGS="-Wl,-thinlto-jobs=4 -Wl,-thinlto-cache-policy,cache_size_bytes=6g -Wl,-thinlto-cache-dir='${stageBase}/objects/thinlto_cache'" 
 
 
@@ -200,6 +201,7 @@ cmake ../${repoSrcStr}/llvm -G "Ninja" \
     -DLLDB_TEST_CXX_COMPILER="${rootDir}/stage_3_tests/objects/bin/clang++" \
     -DLLVM_ENABLE_ASSERTIONS=1 \
    	-DLLVM_ENABLE_PROJECTS="all" \
+   	-DLLVM_TOOL_LLGO_BUILD=0 \
    	-DLLVM_LIT_ARGS="--timeout 300 -sv" \
     -DCMAKE_EXE_LINKER_FLAGS="-Wl,-thinlto-jobs=4 -Wl,-thinlto-cache-policy,cache_size_bytes=6g -Wl,-thinlto-cache-dir='${stageBase}/objects/thinlto_cache'" 
 
