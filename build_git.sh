@@ -32,7 +32,7 @@ echo -e "\e[95mCloning/updating repo...\e[39m"
 repoSrcStr="llvm-project-20170507"
 
 if ! test -d ${repoSrcStr}; then
-	git clone https://github.com/llvm-project/llvm-project-20170507 ${repoSrcStr}
+	git clone https://github.com/llvm/llvm-project ${repoSrcStr}
 else
 	cd ${repoSrcStr}
 	git pull
@@ -171,7 +171,7 @@ export LLVMTestSuite=${LLVMSrc}/test-suite
 
 echo -e "\e[95mllvm tests-suite\e[39m"
 if ! test -d ${LLVMTestSuite}; then
-    git clone https://github.com/llvm-mirror/test-suite/ ${LLVMTestSuite}
+    git clone https://github.com/llvm/llvm-test-suite/ ${LLVMTestSuite}
 else
 	cd ${LLVMTestSuite}
 	git pull
